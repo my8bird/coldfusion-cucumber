@@ -1,21 +1,39 @@
 component {
 
     public function init() {
-        this.featurePath = "./tests";
         this.features = [];
-
-        this.stepDefsPath = "./stepdefs";
         this.stepDefs = [];
 
         this.resultAggregator = new result_aggregator();
     }
 
     public array function run() {
-        scanForSetup();
-
         execTests();
-
         return this.resultAggregator.simplify();
+    }
+
+    public void function findFeatures(featurePath) {
+        var files = findFeatureFiles(featurePath);
+        if(arrayLen(files) == 0) {
+            throw(message="No feature files found at: " & featurePath);
+        }
+
+        for (i = 1; i LTE ArrayLen(files); i = i + 1) {
+            arrayAppend(this.features, parseFeatureFile(files[i]));
+        }
+    }
+
+    public void function findStepDefs(stepDefPath) {
+        var files = findStepDefsFiles(stepDefPath);
+        if(arrayLen(files) == 0) {
+            throw(message="No step def files found at: " & stepDefPath);
+        }
+
+        files = arrayMap(files,
+            function(f) {return 'stepdefs/' & f.replace('.cfc', ''); });
+        for (i = 1; i LTE ArrayLen(files); i = i + 1) {
+            arrayAppend(this.stepDefs, parseStepDefFile(files[i]));
+        }
     }
 
     private void function execTests() {
@@ -24,27 +42,6 @@ component {
                 function(result) {
                     this.resultaggregator.handleResult(result);
                 });
-        }
-    }
-
-    private function scanForSetup() {
-        buildFeatureList();
-        buildStepDefList();
-    }
-
-    private void function buildFeatureList() {
-        var files = findFeatureFiles(this.featurePath);
-        for (i = 1; i LTE ArrayLen(files); i = i + 1) {
-            arrayAppend(this.features, parseFeatureFile(files[i]));
-        }
-    }
-
-    private void function buildStepDefList() {
-        var files = findStepDefsFiles(this.stepDefsPath);
-        files = arrayMap(files,
-            function(f) {return 'stepdefs/' & f.replace('.cfc', ''); });
-        for (i = 1; i LTE ArrayLen(files); i = i + 1) {
-            arrayAppend(this.stepDefs, parseStepDefFile(files[i]));
         }
     }
 
