@@ -29,14 +29,14 @@ Options:
 To implement the steps used in a feature file a component MUST define what that step does.  In order to convert from Gerhkin to CF the component methods are decorated with a `matcher` property.  This is a regular expression which will match a scenario step.
 
 Example scenario:
-```
+```cucumber
 Feature: some feature
 Scenario: A scenario to test
 When something happens
 Then we can test that it happened
 ```
 
-```cfscript
+```cfc
 component {
    public void function somethingHappens() matcher = "^something happens$" {
         // do work
