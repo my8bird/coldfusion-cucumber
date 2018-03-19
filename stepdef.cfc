@@ -13,7 +13,8 @@ component {
 
     private StepFunc function buildStepFunc(cmp, func) {
         var f = new StepFunc();
-        f.matcher = func.matcher;
+        var pattern = createObject("java", "java.util.regex.Pattern").compile(func.matcher);
+        f.pattern = pattern;
         f.cmp = cmp;
         f.func = func;
         return f;

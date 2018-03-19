@@ -11,11 +11,11 @@ component {
         for (step in this.steps) {
             resultCb({step: step, step_start: gettickcount()});
             var step_start = gettickcount();
-            var stepFunc = findStepDefFor(stepDefs, step);
+            var step_method = findStepDefFor(stepDefs, step);
             try {
 // xxx add args to call
 // xxx data table support
-                stepFunc.invoke();
+                step_method();
 
                 resultCb({step: step, passed: true, step_finish: gettickcount()});
             } catch (any e) {
@@ -32,11 +32,18 @@ component {
         arrayAppend(this.steps, new step(lineStart, trim(lineEnd)));
     }
 
-    private StepFunc function findStepDefFor(stepDefs, step) {
+    private any function findStepDefFor(stepDefs, step) {
         for (def in stepDefs) {
             for (m in def.meth) {
-                if (m.matcher == step.text) {
-                    return m;
+                var matcher = m.pattern.matcher(step.text);
+                if (matcher.matches()) {
+                    var args = [];
+                    for (var i=1; i <= matcher.groupCount(); i++) {
+                        arrayAppend(args, matcher.group(Val(i)));
+                    }
+                    return function() {
+                        invoke(m.cmp, m.func.name, args);
+                    };
                 }
             }
         }

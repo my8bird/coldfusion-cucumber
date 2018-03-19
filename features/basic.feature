@@ -1,7 +1,7 @@
 Feature: Basic feature file
 
 	Scenario: Handles scenarios
-		Given precondition
+		Given precondition is something
 		And another setup piece
 		When something happens
 		Then this is the outcome

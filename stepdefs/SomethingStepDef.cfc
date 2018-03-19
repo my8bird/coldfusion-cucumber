@@ -1,20 +1,18 @@
 component {
-    public function init() {
+
+    public void function givenPrecondition(isIsNot, condition) matcher="^precondition (is|is not) (.*)$" {
+        throw(message = "something bad happened ruh roh: " & isisnot & ' ' & condition);
     }
 
-    public void function givenPrecondition() matcher = "precondition" {
-        throw(message="something bad happened ruh roh");
-    }
-
-    public void function thenSomethingHappens() matcher = "something happens" {
-
-    }
-
-    public void function antherSetupPiece() matcher = "another setup piece" {
+    public void function thenSomethingHappens() matcher="something happens" {
 
     }
 
-    public void function soIsThis() matcher = "so is this" {
+    public void function antherSetupPiece() matcher="another setup piece" {
+
+    }
+
+    public void function soIsThis() matcher="so is this" {
 
     }
 }
